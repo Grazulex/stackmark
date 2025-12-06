@@ -1,6 +1,6 @@
 {
   "name": "stackmark",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CLI de gestion de stacks Docker pour le développement local",
   "type": "module",
   "main": "dist/index.js",
