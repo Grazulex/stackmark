@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import { addCommand } from './commands/add.js';
 import { removeCommand } from './commands/remove.js';
 import { listCommand } from './commands/list.js';
@@ -15,7 +18,10 @@ import { initCommand } from './commands/init.js';
 import { dashboardCommand } from './commands/dashboard.js';
 import { colors } from './utils/colors.js';
 
-const VERSION = '1.0.0';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
+const VERSION = pkg.version;
 
 const banner = `
 ${colors.brand('┌─────────────────────────────────────┐')}
