@@ -1,6 +1,6 @@
 {
   "name": "@grazulex/stackmark",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "CLI de gestion de stacks Docker pour le développement local",
   "type": "module",
   "main": "dist/index.js",

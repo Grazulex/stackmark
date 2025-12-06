@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0](https://github.com/Grazulex/stackmark/releases/tag/v1.1.0) (2025-12-06)
+
+### Features
+
+- add autostart command to control container restart policy ([ccc1022](https://github.com/Grazulex/stackmark/commit/ccc10227f71a25c6b039c4be311e8303b01696ab))
+
+### Bug Fixes
+
+- convert logo to true PNG with transparent background ([ab2e11f](https://github.com/Grazulex/stackmark/commit/ab2e11fe54eb891964f377532964735c84f3ef87))
+
+### Documentation
+
+- use absolute URL for logo in README ([7c6b088](https://github.com/Grazulex/stackmark/commit/7c6b0880d37f03d8d29e9c4ed4fa470d5a25d428))
 ## [1.0.3](https://github.com/Grazulex/stackmark/releases/tag/v1.0.3) (2025-12-06)
 
 ### Documentation
