@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="logo.png" alt="StackMark Logo" width="120" />
+<img src="https://raw.githubusercontent.com/Grazulex/stackmark/main/logo.png" alt="StackMark Logo" width="120" />
 
 # StackMark
 
