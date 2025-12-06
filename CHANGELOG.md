@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.3](https://github.com/Grazulex/stackmark/releases/tag/v1.0.3) (2025-12-06)
+
+### Documentation
+
+- add logo and revamp README ([7e918a7](https://github.com/Grazulex/stackmark/commit/7e918a7d31dadb12daf4e87397740518e78652d3))
 ## [1.0.2](https://github.com/Grazulex/stackmark/releases/tag/v1.0.2) (2025-12-06)
 
 ### Bug Fixes
