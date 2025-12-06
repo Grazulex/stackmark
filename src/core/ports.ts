@@ -118,26 +118,60 @@ export function allocatePorts(portMappings: PortMapping[]): PortMapping[] {
   return allocated;
 }
 
-export function generateOverrideYaml(portMappings: PortMapping[]): string {
-  if (portMappings.length === 0) return '';
+export function scanServices(stackPath: string): string[] {
+  const composePath = getComposeFilePath(stackPath);
+  if (!composePath) return [];
 
-  const services: Record<string, string[]> = {};
+  const content = readFileSync(composePath, 'utf-8');
+  const compose: ComposeFile = parse(content);
 
+  if (!compose?.services) return [];
+  return Object.keys(compose.services);
+}
+
+export function generateOverrideYaml(
+  portMappings: PortMapping[],
+  restartPolicy?: string,
+  allServices?: string[]
+): string {
+  const services: Record<string, { ports?: string[]; restart?: string }> = {};
+
+  // Add port mappings
   for (const mapping of portMappings) {
     if (!services[mapping.service]) {
-      services[mapping.service] = [];
+      services[mapping.service] = {};
     }
-    services[mapping.service].push(`${mapping.external}:${mapping.internal}`);
+    if (!services[mapping.service].ports) {
+      services[mapping.service].ports = [];
+    }
+    services[mapping.service].ports!.push(`${mapping.external}:${mapping.internal}`);
   }
+
+  // Add restart policy for all services if specified
+  if (restartPolicy && allServices) {
+    for (const service of allServices) {
+      if (!services[service]) {
+        services[service] = {};
+      }
+      services[service].restart = restartPolicy;
+    }
+  }
+
+  if (Object.keys(services).length === 0) return '';
 
   // Use !override to completely replace ports instead of merging
   // This is supported in Docker Compose V2+
   let yaml = 'services:\n';
-  for (const [service, ports] of Object.entries(services)) {
+  for (const [service, config] of Object.entries(services)) {
     yaml += `  ${service}:\n`;
-    yaml += `    ports: !override\n`;
-    for (const port of ports) {
-      yaml += `      - "${port}"\n`;
+    if (config.ports && config.ports.length > 0) {
+      yaml += `    ports: !override\n`;
+      for (const port of config.ports) {
+        yaml += `      - "${port}"\n`;
+      }
+    }
+    if (config.restart) {
+      yaml += `    restart: "${config.restart}"\n`;
     }
   }
 

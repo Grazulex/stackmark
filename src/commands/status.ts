@@ -69,6 +69,12 @@ function displayStackStatus(stack: Stack): void {
     logger.dim(`    Domains: ${stack.domains.join(', ')}`);
   }
 
+  // Show autostart status
+  const autostartEnabled = stack.autostart !== false; // default true for backwards compat
+  const autostartIcon = autostartEnabled ? colors.success('↻') : colors.muted('↻');
+  const autostartText = autostartEnabled ? 'autostart enabled' : 'autostart disabled';
+  logger.dim(`    ${autostartIcon} ${autostartText}`);
+
   // Show other ports compactly (use actual ports when running)
   if (ports.length > 0) {
     const otherPorts = ports

@@ -78,6 +78,12 @@ export function listCommand(): void {
 
     logger.dim(`    ${stack.path}`);
 
+    // Show autostart status
+    const autostartEnabled = stack.autostart !== false; // default true for backwards compat
+    const autostartIcon = autostartEnabled ? colors.success('↻') : colors.muted('↻');
+    const autostartText = autostartEnabled ? 'autostart' : 'no autostart';
+    logger.dim(`    ${autostartIcon} ${autostartText}`);
+
     // Show other ports compactly (use actual ports when running)
     if (ports.length > 0) {
       const otherPorts = ports

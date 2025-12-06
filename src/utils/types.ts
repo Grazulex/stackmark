@@ -9,6 +9,7 @@ export interface Stack {
   path: string;
   domains?: string[];
   portMappings?: PortMapping[];
+  autostart?: boolean; // Whether containers should auto-start on system boot (default: true)
 }
 
 export interface Config {

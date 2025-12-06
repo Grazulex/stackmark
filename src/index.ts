@@ -16,6 +16,7 @@ import { hostsSyncCommand } from './commands/hosts.js';
 import { openCommand } from './commands/open.js';
 import { initCommand } from './commands/init.js';
 import { dashboardCommand } from './commands/dashboard.js';
+import { autostartEnableCommand, autostartDisableCommand } from './commands/autostart.js';
 import { colors } from './utils/colors.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -113,5 +114,19 @@ hosts
   .command('sync')
   .description('Sync hosts with running stacks')
   .action(hostsSyncCommand);
+
+const autostart = program
+  .command('autostart')
+  .description('Manage container autostart on system boot');
+
+autostart
+  .command('enable [name]')
+  .description('Enable autostart for a stack (auto-detects if in stack directory)')
+  .action(autostartEnableCommand);
+
+autostart
+  .command('disable [name]')
+  .description('Disable autostart for a stack (auto-detects if in stack directory)')
+  .action(autostartDisableCommand);
 
 program.parse();

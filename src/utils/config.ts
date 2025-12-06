@@ -61,6 +61,14 @@ export function removeStack(name: string): boolean {
   return true;
 }
 
+export function updateStack(name: string, updates: Partial<Omit<Stack, 'name'>>): boolean {
+  const config = loadConfig();
+  if (!config.stacks[name]) return false;
+  config.stacks[name] = { ...config.stacks[name], ...updates };
+  saveConfig(config);
+  return true;
+}
+
 export function stackExists(name: string): boolean {
   const config = loadConfig();
   return !!config.stacks[name];

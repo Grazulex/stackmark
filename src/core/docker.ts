@@ -2,7 +2,7 @@ import { spawn, execSync } from 'child_process';
 import { existsSync, writeFileSync, unlinkSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
-import { generateOverrideYaml } from './ports.js';
+import { generateOverrideYaml, scanServices } from './ports.js';
 import type { Stack, StackStatus, ContainerInfo, PortMapping } from '../utils/types.js';
 
 function getComposeFile(stack: Stack): string | null {
@@ -19,7 +19,15 @@ interface ComposeResult {
   output: string;
 }
 
-function runCompose(stack: Stack, args: string[], useOverride: boolean = false, streamOutput: boolean = false): Promise<ComposeResult> {
+interface ComposeOptions {
+  useOverride?: boolean;
+  streamOutput?: boolean;
+  applyRestartPolicy?: boolean;
+}
+
+function runCompose(stack: Stack, args: string[], options: ComposeOptions = {}): Promise<ComposeResult> {
+  const { useOverride = false, streamOutput = false, applyRestartPolicy = false } = options;
+
   return new Promise((resolve) => {
     const composeFile = getComposeFile(stack);
     if (!composeFile) {
@@ -28,16 +36,27 @@ function runCompose(stack: Stack, args: string[], useOverride: boolean = false, 
     }
 
     const hasPortMappings = stack.portMappings && stack.portMappings.length > 0;
-    const shouldOverride = useOverride && hasPortMappings;
+    const shouldApplyRestart = applyRestartPolicy && stack.autostart === false;
+    const shouldOverride = (useOverride && hasPortMappings) || shouldApplyRestart;
 
     let overrideFile: string | null = null;
 
     const composeArgs = ['compose', '--progress=plain', '-f', composeFile];
     if (shouldOverride) {
       overrideFile = join(tmpdir(), `stackmark-${stack.name}-${Date.now()}.yml`);
-      const overrideYaml = generateOverrideYaml(stack.portMappings!);
-      writeFileSync(overrideFile, overrideYaml);
-      composeArgs.push('-f', overrideFile);
+      const allServices = shouldApplyRestart ? scanServices(stack.path) : undefined;
+      const restartPolicy = shouldApplyRestart ? 'no' : undefined;
+      const overrideYaml = generateOverrideYaml(
+        hasPortMappings && useOverride ? stack.portMappings! : [],
+        restartPolicy,
+        allServices
+      );
+      if (overrideYaml) {
+        writeFileSync(overrideFile, overrideYaml);
+        composeArgs.push('-f', overrideFile);
+      } else {
+        overrideFile = null;
+      }
     }
     composeArgs.push(...args);
 
@@ -106,14 +125,18 @@ function runCompose(stack: Stack, args: string[], useOverride: boolean = false, 
 
 export async function startStack(stack: Stack, useOverride: boolean = true): Promise<void> {
   // Stream output in real-time for start (can take time to pull/build)
-  const result = await runCompose(stack, ['up', '-d'], useOverride, true);
+  const result = await runCompose(stack, ['up', '-d'], {
+    useOverride,
+    streamOutput: true,
+    applyRestartPolicy: true,
+  });
   if (!result.success) {
     throw new Error(result.output || 'Failed to start stack');
   }
 }
 
 export async function stopStack(stack: Stack): Promise<void> {
-  const result = await runCompose(stack, ['down'], true, true);
+  const result = await runCompose(stack, ['down'], { streamOutput: true });
   if (!result.success) {
     throw new Error(result.output || 'Failed to stop stack');
   }
@@ -122,11 +145,15 @@ export async function stopStack(stack: Stack): Promise<void> {
 export async function restartStack(stack: Stack, useOverride: boolean = true): Promise<void> {
   // For restart, we need to do down + up to apply port changes
   // Simple restart doesn't recreate containers with new ports
-  const downResult = await runCompose(stack, ['down'], useOverride, true);
+  const downResult = await runCompose(stack, ['down'], { streamOutput: true });
   if (!downResult.success) {
     throw new Error(downResult.output || 'Failed to stop stack');
   }
-  const upResult = await runCompose(stack, ['up', '-d'], useOverride, true);
+  const upResult = await runCompose(stack, ['up', '-d'], {
+    useOverride,
+    streamOutput: true,
+    applyRestartPolicy: true,
+  });
   if (!upResult.success) {
     throw new Error(upResult.output || 'Failed to start stack');
   }

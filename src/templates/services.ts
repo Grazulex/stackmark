@@ -34,6 +34,7 @@ export const phpService: ServiceDefinition = {
           PHP_VERSION: version,
         },
       },
+      restart: 'no',
       volumes: ['.:/var/www/html'],
       networks: [projectName],
     },
@@ -53,6 +54,7 @@ export const nodeService: ServiceDefinition = {
   getService: (version, projectName) => ({
     app: {
       image: `node:${version}-alpine`,
+      restart: 'no',
       working_dir: '/app',
       volumes: ['.:/app'],
       networks: [projectName],
@@ -74,6 +76,7 @@ export const nginxService: ServiceDefinition = {
   getService: (version, projectName) => ({
     nginx: {
       image: `nginx:${version}`,
+      restart: 'no',
       ports: ['80:80'],
       volumes: [
         '.:/var/www/html',
@@ -97,6 +100,7 @@ export const mysqlService: ServiceDefinition = {
   getService: (version, projectName) => ({
     db: {
       image: `mysql:${version}`,
+      restart: 'no',
       ports: ['3306:3306'],
       environment: {
         MYSQL_ROOT_PASSWORD: 'secret',
@@ -123,6 +127,7 @@ export const mariadbService: ServiceDefinition = {
   getService: (version, projectName) => ({
     db: {
       image: `mariadb:${version}`,
+      restart: 'no',
       ports: ['3306:3306'],
       environment: {
         MARIADB_ROOT_PASSWORD: 'secret',
@@ -149,6 +154,7 @@ export const postgresService: ServiceDefinition = {
   getService: (version, projectName) => ({
     db: {
       image: `postgres:${version}-alpine`,
+      restart: 'no',
       ports: ['5432:5432'],
       environment: {
         POSTGRES_DB: projectName,
@@ -173,6 +179,7 @@ export const redisService: ServiceDefinition = {
   getService: (version, projectName) => ({
     redis: {
       image: `redis:${version}-alpine`,
+      restart: 'no',
       ports: ['6379:6379'],
       volumes: [`${projectName}-redis:/data`],
       networks: [projectName],
@@ -191,6 +198,7 @@ export const memcachedService: ServiceDefinition = {
   getService: (version, projectName) => ({
     memcached: {
       image: `memcached:${version}-alpine`,
+      restart: 'no',
       ports: ['11211:11211'],
       networks: [projectName],
     },
@@ -208,6 +216,7 @@ export const mailpitService: ServiceDefinition = {
   getService: (_version, projectName) => ({
     mailpit: {
       image: 'axllent/mailpit',
+      restart: 'no',
       ports: ['1025:1025', '8025:8025'],
       networks: [projectName],
     },
@@ -225,6 +234,7 @@ export const minioService: ServiceDefinition = {
   getService: (_version, projectName) => ({
     minio: {
       image: 'minio/minio',
+      restart: 'no',
       ports: ['9000:9000', '9001:9001'],
       environment: {
         MINIO_ROOT_USER: 'minioadmin',
@@ -248,6 +258,7 @@ export const phpmyadminService: ServiceDefinition = {
   getService: (_version, projectName) => ({
     phpmyadmin: {
       image: 'phpmyadmin',
+      restart: 'no',
       ports: ['8080:80'],
       environment: {
         PMA_HOST: 'db',
