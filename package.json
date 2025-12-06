@@ -1,5 +1,5 @@
 {
-  "name": "stackmark",
+  "name": "@grazulex/stackmark",
   "version": "1.0.1",
   "description": "CLI de gestion de stacks Docker pour le développement local",
   "type": "module",
@@ -7,6 +7,14 @@
   "bin": {
     "stackmark": "./dist/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Grazulex/stackmark.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Grazulex/stackmark/issues"
+  },
+  "homepage": "https://github.com/Grazulex/stackmark#readme",
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
