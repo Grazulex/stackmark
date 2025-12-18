@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0](https://github.com/Grazulex/stackmark/releases/tag/v1.2.0) (2025-12-18)
+
+### Features
+
+- add web dashboard command ([614a18d](https://github.com/Grazulex/stackmark/commit/614a18d7c1fa9b9720c19a345e8ee0cb57c6c45b))
 ## [1.1.0](https://github.com/Grazulex/stackmark/releases/tag/v1.1.0) (2025-12-06)
 
 ### Features
