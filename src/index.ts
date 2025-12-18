@@ -17,6 +17,7 @@ import { openCommand } from './commands/open.js';
 import { initCommand } from './commands/init.js';
 import { dashboardCommand } from './commands/dashboard.js';
 import { autostartEnableCommand, autostartDisableCommand } from './commands/autostart.js';
+import { webCommand } from './commands/web.js';
 import { colors } from './utils/colors.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -105,6 +106,13 @@ program
   .alias('dash')
   .description('Interactive dashboard with auto-refresh (press q to quit)')
   .action(dashboardCommand);
+
+program
+  .command('web')
+  .description('Launch web dashboard in browser')
+  .option('-p, --port <port>', 'Port to run the server on (default: 3456)')
+  .option('-o, --open', 'Open browser automatically')
+  .action(webCommand);
 
 const hosts = program
   .command('hosts')
