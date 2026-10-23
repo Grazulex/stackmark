@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1](https://github.com/Grazulex/stackmark/releases/tag/v1.2.1) (2026-10-23)
+
+### Security
+
+- Update dependencies within existing ranges and bump `dockerode` to ^5.0.1 (drops the vulnerable `uuid`, pulls a patched `tar-fs`): `npm audit` now reports no vulnerabilities (was 1 critical, 1 high, 4 moderate: protobufjs, @grpc/grpc-js, uuid, yaml…)
+
 ## [1.2.0](https://github.com/Grazulex/stackmark/releases/tag/v1.2.0) (2025-12-18)
 
 ### Features
